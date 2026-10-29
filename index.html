@@ -1,35 +1,699 @@
 
-<section class="dashboard-section">
-  <h1>Health360 - Comprehensive Risk & Disease Analysis</h1>
-  <p>Explore health risks and disease patterns through interactive visualizations.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071b2e" />
+  <meta name="description" content="Health360 healthcare risk and disease analysis dashboard." />
+  <title>Health360 | Healthcare Analytics</title>
 
-  <div class="dashboard-container">
-    <tableau-viz
-      id="health360-dashboard"
-      src="YOUR_PUBLISHED_TABLEAU_VIEW_URL"
-      toolbar="bottom"
-      hide-tabs
-      width="100%"
-      height="800">
-    </tableau-viz>
-  </div>
-</section>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script
-  type="module"
-  src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js">
-</script>
+  <style>
+    :root {
+      --bg: #071b2e;
+      --panel: #0d263a;
+      --teal: #2dd4bf;
+      --text: #f4f8fc;
+      --muted: #a4b6c8;
+      --border: rgba(255,255,255,.11);
+    }
 
-<style>
-  .dashboard-section {
-    max-width: 1400px;
-    margin: 30px auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .dashboard-container {
-    width: 100%;
-    min-height: 800px;
-  }
-</style>
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      width: min(1160px, 90%);
+      margin: auto;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(7,27,46,.91);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font: 800 23px Manrope, sans-serif;
+      letter-spacing: -.7px;
+    }
+
+    .logo-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--teal);
+      color: #06252c;
+      font-size: 25px;
+    }
+
+    .logo span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a:hover { color: var(--teal); }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: .25s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      color: #06252c;
+      background: var(--teal);
+      box-shadow: 0 8px 30px rgba(45,212,191,.14);
+    }
+
+    .btn-primary:hover {
+      background: #78f0dc;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 34px rgba(45,212,191,.24);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: rgba(255,255,255,.035);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--teal);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      padding: 94px 0 76px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 540px;
+      height: 540px;
+      right: -150px;
+      top: -180px;
+      border-radius: 50%;
+      background: rgba(45,212,191,.09);
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 55px;
+      align-items: center;
+      position: relative;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      color: var(--teal);
+      background: rgba(45,212,191,.09);
+      border: 1px solid rgba(45,212,191,.22);
+      border-radius: 30px;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--teal);
+      border-radius: 50%;
+    }
+
+    h1, h2, h3 {
+      font-family: Manrope, sans-serif;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(38px, 5vw, 61px);
+      letter-spacing: -2.7px;
+      margin: 25px 0 20px;
+    }
+
+    h1 span {
+      color: var(--teal);
+    }
+
+    .hero-description {
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 560px;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 13px;
+      flex-wrap: wrap;
+    }
+
+    .trust {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 26px;
+    }
+
+    .trust-icon { color: var(--teal); font-size: 18px; }
+
+    .visual-card {
+      border: 1px solid rgba(255,255,255,.13);
+      background: linear-gradient(145deg, #102f46, #0a2034);
+      padding: 25px;
+      border-radius: 23px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.2);
+    }
+
+    .visual-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .visual-heading h3 { font-size: 16px; }
+
+    .live-tag {
+      color: var(--teal);
+      font-size: 11px;
+      background: rgba(45,212,191,.1);
+      padding: 6px 9px;
+      border-radius: 7px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+    }
+
+    .metric {
+      padding: 17px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.035);
+      border-radius: 13px;
+    }
+
+    .metric-label { color: var(--muted); font-size: 12px; }
+
+    .metric-value {
+      font: 800 28px Manrope, sans-serif;
+      margin: 7px 0;
+    }
+
+    .metric-note { font-size: 11px; color: #b9cbd8; }
+
+    .metric-symbol {
+      color: var(--teal);
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .chart {
+      height: 118px;
+      margin-top: 18px;
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      padding: 15px 10px 0;
+      border-bottom: 1px solid var(--border);
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 28px,
+        rgba(255,255,255,.055) 29px
+      );
+    }
+
+    .bar {
+      flex: 1;
+      min-width: 8px;
+      border-radius: 5px 5px 0 0;
+      background: linear-gradient(to top, #0d9488, #5eead4);
+      animation: rise .9s ease both;
+      transform-origin: bottom;
+    }
+
+    @keyframes rise {
+      from { transform: scaleY(.1); }
+      to { transform: scaleY(1); }
+    }
+
+    .section { padding: 78px 0; }
+
+    .section-light {
+      background: #f5f9fc;
+      color: #102a40;
+    }
+
+    .section-heading {
+      max-width: 690px;
+      margin-bottom: 38px;
+    }
+
+    .section-heading .eyebrow { margin-bottom: 17px; }
+
+    .section-heading h2 {
+      font-size: clamp(29px, 4vw, 42px);
+      letter-spacing: -1.4px;
+      margin-bottom: 13px;
+    }
+
+    .section-heading p { color: var(--muted); }
+
+    .section-light .section-heading p { color: #64788a; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature {
+      padding: 26px;
+      border-radius: 16px;
+      border: 1px solid #e1eaf0;
+      background: white;
+      transition: .25s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(14,45,68,.08);
+      border-color: #9de8dc;
+    }
+
+    .feature-icon {
+      width: 49px;
+      height: 49px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: #e0faf5;
+      color: #087e73;
+      font-size: 23px;
+      margin-bottom: 18px;
+    }
+
+    .feature h3 { font-size: 17px; margin-bottom: 10px; }
+
+    .feature p { color: #64788a; font-size: 14px; }
+
+    .dashboard-panel {
+      padding: 40px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #102f46, #0b2033);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .dashboard-panel h2 {
+      font-size: clamp(25px, 3.5vw, 36px);
+      margin: 14px 0;
+    }
+
+    .dashboard-panel p {
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .dashboard-panel .btn { flex-shrink: 0; }
+
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .topic {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #d2e4ed;
+      background: rgba(255,255,255,.035);
+    }
+
+    .disclaimer {
+      font-size: 12px;
+      color: #9aafbf;
+      margin-top: 22px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 26px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand { color: var(--teal); font-weight: 700; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 38px; }
+      .hero { padding: 65px 0; }
+      .visual-card { max-width: 580px; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-panel { align-items: flex-start; flex-direction: column; padding: 30px; }
+    }
+
+    @media (max-width: 560px) {
+      .nav-inner { min-height: 68px; }
+      .logo { font-size: 20px; }
+      .logo-icon { width: 38px; height: 38px; }
+      .nav-links { gap: 12px; font-size: 12px; }
+      .nav-links .nav-dashboard { display: none; }
+      h1 { letter-spacing: -1.7px; }
+      .hero-description { font-size: 15px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .metric-value { font-size: 24px; }
+      .visual-card { padding: 18px; }
+      .section { padding: 55px 0; }
+      .dashboard-panel { padding: 23px; }
+      .hero-actions .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <a class="logo" href="#home" aria-label="Health360 home">
+        <span class="logo-icon">✚</span>
+        Health<span>360</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a class="nav-dashboard" href="#dashboard">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Healthcare Data Analytics</div>
+
+          <h1>Understand Health.<br><span>Discover Insights.</span></h1>
+
+          <p class="hero-description">
+            Explore healthcare data, identify disease patterns, and understand
+            health-related risk factors through clear, interactive visualizations.
+            Welcome to Health360.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary"
+               href="https://drive.google.com/file/d/1om5xXJQk9fY_eddCvDjv2TaM7DCQ_Axr/view?usp=sharing"
+               target="_blank"
+               rel="noopener noreferrer">
+              View Dashboard <span aria-hidden="true">↗</span>
+            </a>
+
+            <a class="btn btn-outline" href="#features">
+              Explore Project ↓
+            </a>
+          </div>
+
+          <div class="trust">
+            <span class="trust-icon">✓</span>
+            Data visualization · Disease analysis · Health insights
+          </div>
+        </div>
+
+        <div class="visual-card">
+          <div class="visual-heading">
+            <h3>Health Analytics Overview</h3>
+            <span class="live-tag">PROJECT PREVIEW</span>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric">
+              <div class="metric-symbol">♡</div>
+              <div class="metric-label">Heart Health</div>
+              <div class="metric-value">01</div>
+              <div class="metric-note">Disease distribution</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-symbol">⌁</div>
+              <div class="metric-label">Diabetes</div>
+              <div class="metric-value">02</div>
+              <div class="metric-note">Risk factor analysis</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-symbol">⌖</div>
+              <div class="metric-label">Stroke</div>
+              <div class="metric-value">03</div>
+              <div class="metric-note">Age-based patterns</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-symbol">⌁</div>
+              <div class="metric-label">Health Indicators</div>
+              <div class="metric-value">04</div>
+              <div class="metric-note">BMI, blood pressure</div>
+            </div>
+          </div>
+
+          <div class="chart" aria-label="Illustrative decorative bar chart">
+            <div class="bar" style="height:35%"></div>
+            <div class="bar" style="height:58%"></div>
+            <div class="bar" style="height:44%"></div>
+            <div class="bar" style="height:78%"></div>
+            <div class="bar" style="height:54%"></div>
+            <div class="bar" style="height:88%"></div>
+            <div class="bar" style="height:66%"></div>
+            <div class="bar" style="height:95%"></div>
+            <div class="bar" style="height:72%"></div>
+          </div>
+          <p class="disclaimer">Illustrative preview only — these bars are not actual dataset results.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-light" id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">About the Project</div>
+          <h2>Turning healthcare data into meaningful insights.</h2>
+          <p>
+            Health360 is a data analytics project focused on exploring
+            disease distributions, demographic patterns, and lifestyle-related
+            health indicators using visual analytics.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature reveal">
+            <div class="feature-icon">♥</div>
+            <h3>Disease Analysis</h3>
+            <p>Explore heart disease, diabetes, and stroke distributions in the dataset.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon">◷</div>
+            <h3>Demographic Insights</h3>
+            <p>Examine age and gender distributions to understand patterns in the data.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon">⌁</div>
+            <h3>Health Indicators</h3>
+            <p>Explore BMI, blood pressure, cholesterol, and glucose measurements.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon">↗</div>
+            <h3>Lifestyle Factors</h3>
+            <p>Study exercise, smoking, alcohol consumption, and fatigue variables.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon">▥</div>
+            <h3>Visual Analytics</h3>
+            <p>Present data through charts that make patterns easier to explore.</p>
+          </article>
+
+          <article class="feature reveal">
+            <div class="feature-icon">⌘</div>
+            <h3>Web Accessibility</h3>
+            <p>Access the project dashboard directly from the Health360 website.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Explore the Analysis</div>
+          <h2>What can you explore?</h2>
+          <p>
+            Discover different dimensions of the healthcare dataset and
+            examine relationships between selected health indicators.
+          </p>
+        </div>
+
+        <div class="topic-list reveal">
+          <span class="topic">Gender Distribution</span>
+          <span class="topic">Heart Disease</span>
+          <span class="topic">Diabetes Analysis</span>
+          <span class="topic">Stroke Rate by Age</span>
+          <span class="topic">Health Risk Score</span>
+          <span class="topic">Blood Pressure</span>
+          <span class="topic">Cholesterol</span>
+          <span class="topic">Age Distribution</span>
+          <span class="topic">BMI Analysis</span>
+          <span class="topic">Glucose Levels</span>
+          <span class="topic">Physical Activity</span>
+          <span class="topic">Smoking Patterns</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="dashboard">
+      <div class="container">
+        <div class="dashboard-panel reveal">
+          <div>
+            <div class="eyebrow">Interactive Data Exploration</div>
+            <h2>Ready to explore Health360?</h2>
+            <p>
+              Open the project dashboard to view the healthcare visualizations
+              and explore the available analyses.
+            </p>
+          </div>
+
+          <a class="btn btn-primary"
+             href="https://drive.google.com/file/d/1om5xXJQk9fY_eddCvDjv2TaM7DCQ_Axr/view?usp=sharing"
+             target="_blank"
+             rel="noopener noreferrer">
+            View Dashboard <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <p class="disclaimer">
+          Disclaimer: This project is for educational and analytical purposes only.
+          It is not intended to diagnose, treat, or predict individual medical conditions.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> <span class="footer-brand">Health360</span>. All rights reserved.</p>
+      <p>Healthcare Risk & Disease Analysis</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach((element) => {
+      observer.observe(element);
+    });
+  </script>
+</body>
+</html>
