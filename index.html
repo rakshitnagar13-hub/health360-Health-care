@@ -1,0 +1,35 @@
+
+<section class="dashboard-section">
+  <h1>Health360 - Comprehensive Risk & Disease Analysis</h1>
+  <p>Explore health risks and disease patterns through interactive visualizations.</p>
+
+  <div class="dashboard-container">
+    <tableau-viz
+      id="health360-dashboard"
+      src="YOUR_PUBLISHED_TABLEAU_VIEW_URL"
+      toolbar="bottom"
+      hide-tabs
+      width="100%"
+      height="800">
+    </tableau-viz>
+  </div>
+</section>
+
+<script
+  type="module"
+  src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js">
+</script>
+
+<style>
+  .dashboard-section {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .dashboard-container {
+    width: 100%;
+    min-height: 800px;
+  }
+</style>
